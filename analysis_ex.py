@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# case consitency countries
 
 class Analyser:
     def __init__(self, table, figure_save_path):

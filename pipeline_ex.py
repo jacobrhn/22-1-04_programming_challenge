@@ -41,11 +41,10 @@ class ETL:
         for row in self.raw_data_tables["vehicle_hash"].index:
             if len(str(self.raw_data_tables["vehicle_hash"].loc[row, "fin"])) != num_of_digits_in_fin:
                 self.raw_data_tables["vehicle_hash"].drop(row, inplace=True)
-        pass
+        # implement reset index
 
     def handle_nans(self):
-        # your code here #
-        pass
+        self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()
