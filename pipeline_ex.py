@@ -4,7 +4,6 @@ import pandas as pd
 
 class ETL:
     final_table = pd.DataFrame()
-    working_table = []
 
     def __init__(self, data_specs=None):
         self.importer = DataLoader(data_specs)
@@ -32,7 +31,7 @@ class ETL:
         self.handle_invalid_dates()
 
     def handle_invalid_dates(self):
-        # your code here #
+#        self.raw_data_tables["sales_codes"]["production_date"] = pd.to_datetime(self.raw_data_tables["sales_codes"]["production_date"])
         pass
 
     def handle_invalid_fins(self, num_of_digits_in_fin=17):
@@ -45,3 +44,9 @@ class ETL:
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()
+
+    def return_raw_data(self):
+        return self.raw_data_tables
+
+    def return_sales_code_raw(self):
+        return self.raw_data_tables["sales_codes"]
