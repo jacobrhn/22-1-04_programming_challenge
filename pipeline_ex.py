@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from import_data_ex import DataLoader
@@ -19,7 +20,8 @@ class ETL:
 
     def save_final_table(self):
         database_path = self.importer.database_config["database_path"]
-        # your code here #
+        data_file_name = "enhanced_vehicle_data.xlsx"
+        self.final_table.to_excel(os.path.join(database_path, data_file_name))
 
     def create_final_table(self):
         self.raw_data_tables["sales_codes"] = self.raw_data_tables["sales_codes"].drop(columns=['Unnamed: 0'])
