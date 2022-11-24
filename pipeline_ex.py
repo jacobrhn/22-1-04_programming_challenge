@@ -44,7 +44,10 @@ class ETL:
         # implement reset index
 
     def handle_nans(self):
-        self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
+        self.raw_data_tables["sales_codes"].dropna(subset=
+                                                   ("h_vehicle_hash", "production_date", "country", "sales_code_array"),
+                                                   axis=0, inplace=True)
+        #implement reset index
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()

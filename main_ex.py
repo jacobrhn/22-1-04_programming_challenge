@@ -10,5 +10,4 @@ final_table = pipeline.run()
 analyser = Analyser(final_table, figure_save_path=figure_save_path)
 analyser.run()
 
-
 date_raw = pipeline.raw_data_tables
