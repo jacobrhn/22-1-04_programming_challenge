@@ -9,6 +9,6 @@ pipeline = ETL("data_specs.json")
 final_table = pipeline.run()
 analyser = Analyser(final_table, figure_save_path=figure_save_path)
 analyser.run()
-sales_codes_raw = pipeline.return_sales_code_raw()
-print(pipeline.raw_data_tables)
-print(sales_codes_raw)
+
+
+date_raw = pipeline.raw_data_tables

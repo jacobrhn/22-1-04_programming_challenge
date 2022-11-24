@@ -8,6 +8,9 @@ class ETL:
     def __init__(self, data_specs=None):
         self.importer = DataLoader(data_specs)
         self.load_data()
+        """self.return_raw_sales_code_df()
+        self.return_raw_engines_table_df()"""
+        self.return_raw_vehicle_hash_df()
 
     def run(self):
         self.enhance_raw_data()
@@ -23,7 +26,7 @@ class ETL:
         self.raw_data_tables["sales_codes"] = self.raw_data_tables["sales_codes"].drop(columns=['Unnamed: 0'])
         self.raw_data_tables["vehicle_hash"] = self.raw_data_tables["vehicle_hash"].drop(
             columns=['Unnamed: 0', 'record_source', 'load_ts'])
-        # your code here #
+        # self.raw_data_tables["engines"] = self.raw_data_tables["engines"].drop(columns=[TOBECONTINUED])
 
     def enhance_raw_data(self):
         self.handle_nans()
@@ -31,11 +34,13 @@ class ETL:
         self.handle_invalid_dates()
 
     def handle_invalid_dates(self):
-#        self.raw_data_tables["sales_codes"]["production_date"] = pd.to_datetime(self.raw_data_tables["sales_codes"]["production_date"])
-        pass
+        self.raw_data_tables["sales_codes"]["production_date"] = pd.to_datetime(self.raw_data_tables["sales_codes"]["production_date"],
+                                                                                dayfirst=True, errors='coerce')
 
     def handle_invalid_fins(self, num_of_digits_in_fin=17):
-        # your code here #
+        for row in self.raw_data_tables["vehicle_hash"].index:
+            if len(str(self.raw_data_tables["vehicle_hash"].loc[row, "fin"])) != num_of_digits_in_fin:
+                self.raw_data_tables["vehicle_hash"].drop(row, inplace=True)
         pass
 
     def handle_nans(self):
@@ -45,8 +50,11 @@ class ETL:
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()
 
-    def return_raw_data(self):
-        return self.raw_data_tables
+    """def return_raw_sales_code_df(self):
+        self.raw_sales_code_df = self.raw_data_tables["sales_codes"]
+    
+    def return_raw_engines_table_df(self):
+        self.raw_engines_df = self.raw_data_tables["engines"]"""
 
-    def return_sales_code_raw(self):
-        return self.raw_data_tables["sales_codes"]
+    def return_raw_vehicle_hash_df(self):
+        self.raw_vehicle_hash_df = self.raw_data_tables["vehicle_hash"].drop(columns=['Unnamed: 0', 'record_source', 'load_ts'])
