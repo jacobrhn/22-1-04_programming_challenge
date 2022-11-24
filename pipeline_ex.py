@@ -50,6 +50,7 @@ class ETL:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
             if not date_lower < self.raw_data_tables["sales_codes"].loc[row, "production_date"] < date_upper:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
+        # remove timestamp
 
     def handle_invalid_fins(self, num_of_digits_in_fin=17):
         for row in self.raw_data_tables["vehicle_hash"].index:
