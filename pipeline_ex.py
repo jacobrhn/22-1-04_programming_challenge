@@ -4,6 +4,7 @@ import pandas as pd
 
 class ETL:
     final_table = pd.DataFrame()
+    working_table = []
 
     def __init__(self, data_specs=None):
         self.importer = DataLoader(data_specs)
