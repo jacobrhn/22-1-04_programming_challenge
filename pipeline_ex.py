@@ -39,7 +39,7 @@ class ETL:
 
     def handle_invalid_dates(self):
         date_lower = datetime(2011, 1, 1, 00, 00, 00)
-        date_upper = datetime(2021, 12, 31, 00, 00, 00)
+        date_upper = datetime(2021, 12, 31, 23, 59, 59)
 
         self.raw_data_tables["sales_codes"]["production_date"] = pd.to_datetime(
             self.raw_data_tables["sales_codes"]["production_date"],
@@ -48,7 +48,7 @@ class ETL:
         for row in self.raw_data_tables["sales_codes"].index:
             if not self.raw_data_tables["sales_codes"].loc[row, "production_date"]:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
-            if not date_lower < self.raw_data_tables["sales_codes"].loc[row, "production_date"] < date_upper:
+            if not date_lower <= self.raw_data_tables["sales_codes"].loc[row, "production_date"] <= date_upper:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
         # remove timestamp
 

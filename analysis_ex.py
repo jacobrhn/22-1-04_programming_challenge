@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-
-# case consitency countries
+from datetime import datetime
 
 class Analyser:
     def __init__(self, table, figure_save_path):
@@ -12,6 +11,15 @@ class Analyser:
     def run(self):
         self.visualize_sales_per_countries()
         self.visualize_sales_per_year()
+
+    def sales_top_three_countries(self):
+        date_lower = datetime(2014,1,1,00,00,00)
+        date_upper = datetime(2020,12,31,00,00,00)
+        data_to_visualize = pd.DataFrame()
+        for row in self.final_table.index:
+            if date_lower <= self.final_table.loc[row, "production_date"] <= date_upper:
+                data_to_visualize[len(data_to_visualize.index)] = self.final_table.loc[row]
+        return data_to_visualize
 
     def filter_for_years(self):
         df = self.final_table
