@@ -5,17 +5,16 @@ from datetime import datetime
 
 class DataFilter:
     def __init__(self, data_frame: pd.DataFrame, date_lower: str = None, date_upper: str = None):
-        self.data = data_frame
-        self.__date_lower = pd.to_datetime(date_lower)
-        self.__date_upper = pd.to_datetime(date_upper)
+        self.filtered_data = pd.DataFrame(data=data_frame)
+        self.__date_lower = pd.to_datetime(date_lower, dayfirst=True)
+        self.__date_upper = pd.to_datetime(date_upper, dayfirst=True)
+        #self.for_dates()
 
     def for_dates(self):
-        dict_data_filtered = {}
-        df_data_filtered = pd.DataFrame(data=dict_data_filtered)
-        for row in self.data.index:
-            if self.__date_lower <= self.data.loc[row, "production_date"] <= self.__date_upper:
-                df_data_filtered.concat(self.data.loc[row])
-        return df_data_filtered
+        for row in self.filtered_data.index:
+            if not self.__date_lower <= self.filtered_data.loc[row, "production_date"] <= self.__date_upper:
+                self.filtered_data.drop(row, inplace=True)
+        return self.filtered_data.reset_index(drop=True)
 
 
 class Analyser:
@@ -28,15 +27,15 @@ class Analyser:
         self.visualize_sales_per_countries()
         self.visualize_sales_per_year()
 
-    def sales_top_three_countries(self):
-        date_lower = datetime(2014, 1, 1, 00, 00, 00)
-        date_upper = datetime(2020, 12, 31, 00, 00, 00)
-        dict_data_to_visualize = {"fin", "production_date", "country", "sales_code_array"}
-        df_data_to_visualize = pd.DataFrame(data=dict_data_to_visualize)
-        for row in self.final_table.index:
-            if date_lower <= self.final_table.loc[row, "production_date"] <= date_upper:
-                df_data_to_visualize[len(df_data_to_visualize.index)] = self.final_table.loc[row]
-        return df_data_to_visualize
+    def data_sales_top_three_countries(self):
+        filter_2014_2020 = DataFilter(data_frame=self.final_table, date_lower="1.1.2014", date_upper="31.12.2021")
+        data_2014_2020 = filter_2014_2020.for_dates().groupby(by=["country"]).count().sort_values(by=["fin", "country"], ascending=False)
+        #counter_2014_2020 = data_2014_2020.groupby(["country"]).count().sort_values(by="country")
+        return data_2014_2020.drop(columns=["fin", "production_date", "sales_code_array"]).iloc[[0,1,2]]
+        #return counter.sort_values(by="counter", ascending=False)
+
+
+
 
     def filter_for_years(self):
         df = self.final_table
