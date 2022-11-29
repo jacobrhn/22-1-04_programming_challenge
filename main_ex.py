@@ -9,7 +9,10 @@ from analysis_ex import DataFilter, Analyser
 figure_save_path = "\\Users\\jacob\\data\\py\\22-1-04_programming_challenge"
 pipeline = ETL("data_specs.json")
 final_table = pipeline.run()
-analyser = Analyser(final_table, figure_save_path=figure_save_path)
-analyser.run()
-filter_2014_2022 = DataFilter(data_frame=final_table, date_lower="1.1.2014", date_upper="31.12.2021")
-print(filter_2014_2022)
+filter_2014_2020 = DataFilter(data_frame=final_table,
+                              date_lower="1.1.2014",
+                              date_upper="31.12.2014")
+data_filter_2014_2020 = filter_2014_2020.for_dates()
+"""analyser = Analyser(final_table, figure_save_path=figure_save_path)
+analyser.run()"""
+
