@@ -30,11 +30,7 @@ class Analyser:
     def data_sales_top_three_countries(self):
         filter_2014_2020 = DataFilter(data_frame=self.final_table, date_lower="1.1.2014", date_upper="31.12.2021")
         data_2014_2020 = filter_2014_2020.for_dates().groupby(by=["country"]).count().sort_values(by=["fin", "country"], ascending=False)
-        #counter_2014_2020 = data_2014_2020.groupby(["country"]).count().sort_values(by="country")
         return data_2014_2020.drop(columns=["fin", "production_date", "sales_code_array"]).iloc[[0,1,2]]
-        #return counter.sort_values(by="counter", ascending=False)
-
-
 
 
     def filter_for_years(self):
