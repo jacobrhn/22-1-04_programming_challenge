@@ -48,10 +48,12 @@ class Analyser:
         df_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
         df_filtered_data = df_filter.for_dates()
         df_filtered_data.loc[:, "production_year"] = pd.DatetimeIndex(df_filtered_data.loc[:, "production_date"]).year
-        return df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
-            .drop(columns=["fin", "production_date", "country", "sales_code_array"]).iloc[0]
-
+        df_result = df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
+            .drop(columns=["fin", "production_date", "country", "sales_code_array"])
+        return df_result
     def df_first_fin(self):
+        return self.final_table.sort_values(by="production_date").drop(columns=["country", "sales_code_array", "counter"])
+
 
 
     def filter_for_years(self):
