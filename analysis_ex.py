@@ -35,25 +35,23 @@ class Analyser:
         return self.df_with_date_range(date_lower=date_lower, date_upper=date_upper)\
             .groupby(by=["country"]) \
             .count().sort_values(by=["fin", "country"], ascending=False) \
-            .drop(columns=["fin", "production_date"]).iloc[[0, 1, 2]]
-
-    def df_sales_top_three_countries_0(self, date_lower: str, date_upper: str):
-        df_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
-        return df_filter.for_dates() \
-            .groupby(by=["country"]) \
-            .count().sort_values(by=["fin", "country"], ascending=False) \
-            .drop(columns=["fin", "production_date", "sales_code_array"]).iloc[[0, 1, 2]]
+            .drop(columns=["fin", "production_date", "counter"]).iloc[[0, 1, 2]]
 
     def df_sales_top_country(self, date_lower: str, date_upper: str):
-        df_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
-        df_filtered_data = df_filter.for_dates()
+        date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        df_filtered_data = date_filter.for_dates()
         df_filtered_data.loc[:, "production_year"] = pd.DatetimeIndex(df_filtered_data.loc[:, "production_date"]).year
-        df_result = df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
+        return df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
             .drop(columns=["fin", "production_date", "country", "sales_code_array"])
-        return df_result
+
     def df_first_fin(self):
         return self.final_table.sort_values(by="production_date").drop(columns=["country", "sales_code_array", "counter"])
 
+    def df_vehicles_by_motor_types(self, date_lower: str, date_upper: str):
+        date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        df_filtered_data = date_filter.for_dates()
+        #df_filtered_data.loc[:, "sales_code_array"] = df_filtered_data
+        pass
 
 
     def filter_for_years(self):

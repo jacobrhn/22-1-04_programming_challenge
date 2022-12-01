@@ -18,12 +18,9 @@ print(final_table)
 # print(pipeline.raw_data_tables["sales_codes"]["sales_code_array"][0][0:3])
 
 print(final_table)
-print(f"\n--- (2014-2020) ---")
-print(analyser.df_with_date_range(date_lower="1.1.2014", date_upper="31.12.2020"))
-
 print(f"\n--- top 3 countries (2014-2020) ---")
 print(analyser.df_sales_top_three_countries(date_lower="1.1.2014", date_upper="31.12.2020"))
-
+print(f"\n--- top country (2014-2020) ---")
 print(analyser.df_sales_top_country(date_lower="1.1.2014", date_upper="31.12.2020"))
 
 print(analyser.df_first_fin())
