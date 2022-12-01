@@ -37,7 +37,7 @@ class Analyser:
             .count().sort_values(by=["fin", "country"], ascending=False) \
             .drop(columns=["fin", "production_date", "counter"]).iloc[[0, 1, 2]]
 
-    def df_sales_top_country(self, date_lower: str, date_upper: str):
+    def df_sales_by_year(self, date_lower: str, date_upper: str):
         date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
         df_filtered_data = date_filter.for_dates()
         df_filtered_data.loc[:, "production_year"] = pd.DatetimeIndex(df_filtered_data.loc[:, "production_date"]).year
