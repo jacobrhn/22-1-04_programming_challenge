@@ -1,5 +1,4 @@
 import datetime
-
 from pipeline_ex import ETL
 from analysis_ex import DataFilter, Analyser
 
@@ -11,4 +10,18 @@ pipeline = ETL("data_specs.json")
 final_table = pipeline.run()
 analyser = Analyser(table=final_table, figure_save_path=figure_save_path)
 analyser.run()
-print(analyser.df_sales_top_three_countries())
+
+print(f"\n--- final table ---")
+print(final_table)
+
+# print(final_table["sales_code_array"].iloc[0][0:3])
+# print(pipeline.raw_data_tables["sales_codes"]["sales_code_array"][0][0:3])
+
+print(final_table)
+print(f"\n--- (2014-2020) ---")
+print(analyser.df_with_date_range(date_lower="1.1.2014", date_upper="31.12.2020"))
+
+print(f"\n--- top 3 countries (2014-2020) ---")
+print(analyser.df_sales_top_three_countries(date_lower="1.1.2014", date_upper="31.12.2020"))
+
+print(analyser.df_sales_top_country(date_lower="1.1.2014", date_upper="31.12.2020"))

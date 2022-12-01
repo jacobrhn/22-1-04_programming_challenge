@@ -4,6 +4,8 @@ from datetime import datetime
 from import_data_ex import DataLoader
 import pandas as pd
 
+pd.set_option('display.max_columns', 5)
+
 
 class ETL:
     final_table = pd.DataFrame()
@@ -36,6 +38,7 @@ class ETL:
         self.handle_nans()
         self.handle_invalid_fins()
         self.handle_invalid_dates()
+        self.sales_code_to_vehicle_code()
 
     def handle_invalid_dates(self):
         date_lower = datetime(2011, 1, 1, 00, 00, 00)
@@ -50,6 +53,8 @@ class ETL:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
             if not date_lower <= self.raw_data_tables["sales_codes"].loc[row, "production_date"] <= date_upper:
                 self.raw_data_tables["sales_codes"].drop(row, inplace=True)
+
+
         # remove timestamp dt.datetime.strptime(start_date, "%d.%m.%Y")
 
     def handle_invalid_fins(self, num_of_digits_in_fin=17):
@@ -59,6 +64,22 @@ class ETL:
 
     def handle_nans(self):
         self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
+
+    def sales_code_to_vehicle_code_0(self):
+        """for row in self.raw_data_tables["sales_codes"].index:
+            motor_code = row["sales_code_array"][0:3]
+            if motor_code == "Z5E":
+                row["sales_code_array"] = "OM471"""
+        # self.raw_data_tables["sales_codes"]["sales_code_array"].replace(to_replace=["sales_code_array"][0:3] == "Z5E", value="OM471", inplace=True)
+        pass
+
+    def sales_code_to_vehicle_code(self):
+        """result = 1
+        for row in self.raw_data_tables["sales_codes"]["sales_code_array"].items():
+            if row[0:3] == "Z5C": # self.raw_data_tables["engines"]["Sales Code"]:
+                result =  True # row["engine_type"] = "OM 471"
+            return result"""
+        pass
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()

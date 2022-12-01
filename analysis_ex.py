@@ -8,7 +8,7 @@ class DataFilter:
         self.filtered_data = pd.DataFrame(data=data_frame)
         self.__date_lower = pd.to_datetime(date_lower, dayfirst=True)
         self.__date_upper = pd.to_datetime(date_upper, dayfirst=True)
-        #self.for_dates()
+        # self.for_dates()
 
     def for_dates(self):
         for row in self.filtered_data.index:
@@ -27,12 +27,32 @@ class Analyser:
         self.visualize_sales_per_countries()
         self.visualize_sales_per_year()
 
-    def df_sales_top_three_countries(self):
-        filter_2014_2020 = DataFilter(data_frame=self.final_table, date_lower="1.1.2014", date_upper="31.12.2021")
-        data_2014_2020 = filter_2014_2020.for_dates().groupby(by=["country"]).count().sort_values(by=["fin", "country"], ascending=False)
-        return data_2014_2020.drop(columns=["fin", "production_date", "sales_code_array"]).iloc[[0,1,2]]
+    def df_with_date_range(self, date_lower: str, date_upper: str):
+        filtered_data = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        return filtered_data.for_dates()
 
-    def
+    def df_sales_top_three_countries(self, date_lower: str, date_upper: str):
+        return self.df_with_date_range(date_lower=date_lower, date_upper=date_upper)\
+            .groupby(by=["country"]) \
+            .count().sort_values(by=["fin", "country"], ascending=False) \
+            .drop(columns=["fin", "production_date"]).iloc[[0, 1, 2]]
+
+    def df_sales_top_three_countries_0(self, date_lower: str, date_upper: str):
+        df_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        return df_filter.for_dates() \
+            .groupby(by=["country"]) \
+            .count().sort_values(by=["fin", "country"], ascending=False) \
+            .drop(columns=["fin", "production_date", "sales_code_array"]).iloc[[0, 1, 2]]
+
+    def df_sales_top_country(self, date_lower: str, date_upper: str):
+        df_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        df_filtered_data = df_filter.for_dates()
+        df_filtered_data.loc[:, "production_year"] = pd.DatetimeIndex(df_filtered_data.loc[:, "production_date"]).year
+        return df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
+            .drop(columns=["fin", "production_date", "country", "sales_code_array"]).iloc[0]
+
+    def df_first_fin(self):
+
 
     def filter_for_years(self):
         df = self.final_table
