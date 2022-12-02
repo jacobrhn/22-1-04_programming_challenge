@@ -23,4 +23,4 @@ print(analyser.df_sales_top_three_countries(date_lower="1.1.2014", date_upper="3
 print(f"\n--- sales by year (2014-2020) ---")
 print(analyser.df_sales_by_year(date_lower="1.1.2014", date_upper="31.12.2020"))
 print(f"\n--- fin by date ---")
-print(analyser.df_first_fin())
+print(analyser.df_fins_sorted_dates())

@@ -38,7 +38,7 @@ class ETL:
         self.handle_nans()
         self.handle_invalid_fins()
         self.handle_invalid_dates()
-        self.sales_code_to_vehicle_code()
+        self.add_motor_code()
 
     def handle_invalid_dates(self):
         date_lower = datetime(2011, 1, 1, 00, 00, 00)
@@ -65,21 +65,12 @@ class ETL:
     def handle_nans(self):
         self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
 
-    def sales_code_to_vehicle_code_0(self):
-        """for row in self.raw_data_tables["sales_codes"].index:
-            motor_code = row["sales_code_array"][0:3]
-            if motor_code == "Z5E":
-                row["sales_code_array"] = "OM471"""
-        # self.raw_data_tables["sales_codes"]["sales_code_array"].replace(to_replace=["sales_code_array"][0:3] == "Z5E", value="OM471", inplace=True)
-        pass
-
-    def sales_code_to_vehicle_code(self):
-        """result = 1
-        for row in self.raw_data_tables["sales_codes"]["sales_code_array"].items():
-            if row[0:3] == "Z5C": # self.raw_data_tables["engines"]["Sales Code"]:
-                result =  True # row["engine_type"] = "OM 471"
-            return result"""
-        pass
+    def add_motor_code(self):
+        motor_code_dict = {"Z5E": "OM470"}
+        for sales_code_array in self.raw_data_tables["sales_codes"]["sales_code_array"].index:
+            for keys, values in motor_code_dict.items():
+                if sales_code_array in motor_code_dict.keys():
+                    self.raw_data_tables["sales_codes"].loc[:, "motor_code"] = motor_code_dict.values()
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()

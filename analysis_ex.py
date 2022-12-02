@@ -44,8 +44,8 @@ class Analyser:
         return df_filtered_data.groupby(by="production_year").count().sort_values(by="counter", ascending=False)\
             .drop(columns=["fin", "production_date", "country", "sales_code_array"])
 
-    def df_first_fin(self):
-        return self.final_table.sort_values(by="production_date").drop(columns=["country", "sales_code_array", "counter"])
+    def df_fins_sorted_dates(self):
+        return self.final_table.sort_values(by="production_date").drop(columns=["country", "sales_code_array", "counter"]).iloc[[0,1,2]]
 
     def df_vehicles_by_motor_types(self, date_lower: str, date_upper: str):
         date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
