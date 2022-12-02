@@ -45,14 +45,22 @@ class Analyser:
             .drop(columns=["fin", "production_date", "country", "motor_type"])
 
     def df_fins_sorted_dates(self):
-        return self.final_table.sort_values(by="production_date").drop(columns=["country", "counter", "motor_type"]).iloc[[0,1,2]]
+        return self.final_table.sort_values(by="production_date").drop(columns=["country", "counter", "motor_type"])
 
     def df_vehicles_by_motor_types(self, date_lower: str, date_upper: str):
         date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
         df_filtered_data = date_filter.for_dates()
-        #df_filtered_data.loc[:] = df_filtered_data
-        pass
-
+        for row in df_filtered_data.index:
+            if not df_filtered_data.loc[row,"motor_type"] in ["OM 934", "OM 936", "OM 470", "OM 471"]:
+                df_filtered_data.drop(row, inplace=True)
+        return df_filtered_data.groupby(by="motor_type").count().drop(columns=["fin", "country", "production_date"])
+    def df_vehicles_by_motor_types_0(self, date_lower: str, date_upper: str):
+        date_filter = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
+        df_filtered_data = date_filter.for_dates()
+        for row in df_filtered_data.index:
+            if not df_filtered_data.loc[row,"motor_type"] in ["OM 934", "OM 936", "OM 470", "OM 471"]:
+                df_filtered_data.drop(row, inplace=True)
+        return df_filtered_data.groupby(by="motor_type").count().drop(columns=["fin", "country", "production_date"])
 
     def filter_for_years(self):
         df = self.final_table
