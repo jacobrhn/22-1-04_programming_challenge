@@ -4,7 +4,7 @@ from datetime import datetime
 from import_data_ex import DataLoader
 import pandas as pd
 
-pd.set_option('display.max_columns', 5)
+pd.set_option('display.max_columns', 6)
 
 
 class ETL:
@@ -31,8 +31,8 @@ class ETL:
             columns=['Unnamed: 0', 'record_source', 'load_ts'])
         self.final_table = pd.merge(self.raw_data_tables["sales_codes"],
                                     self.raw_data_tables["vehicle_hash"],
-                                    on="h_vehicle_hash").drop(columns=["h_vehicle_hash"])
-        self.final_table = self.final_table[["fin", "production_date", "country", "sales_code_array"]]
+                                    on="h_vehicle_hash").drop(columns=["h_vehicle_hash", "sales_code_array"])
+        self.final_table = self.final_table[["fin", "production_date", "country", "motor_type"]]
 
     def enhance_raw_data(self):
         self.handle_nans()
@@ -66,11 +66,21 @@ class ETL:
         self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
 
     def add_motor_code(self):
-        motor_code_dict = {"Z5E": "OM470"}
-        for sales_code_array in self.raw_data_tables["sales_codes"]["sales_code_array"].index:
-            for keys, values in motor_code_dict.items():
-                if sales_code_array in motor_code_dict.keys():
-                    self.raw_data_tables["sales_codes"].loc[:, "motor_code"] = motor_code_dict.values()
+        for row in self.raw_data_tables["sales_codes"].index:
+            self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = self.raw_data_tables["sales_codes"]["sales_code_array"][row][0:3]
+            if self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5B":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 934"
+            elif self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5C":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 936"
+            elif self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5D":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 470"
+            elif self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5E":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 471"
+            elif self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5F":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 473"
+            elif self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5L":
+                self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = "OM 460"
+
 
     def load_data(self):
         self.raw_data_tables = self.importer.load_data()
