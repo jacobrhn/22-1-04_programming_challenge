@@ -23,6 +23,16 @@ class Analyser:
         self.visualize_sales_per_countries()
         self.visualize_sales_per_year()
 
+    def filter_for_years(self, date_lower: str = None, date_upper: str = None):
+        date_lower = pd.to_datetime(date_lower, dayfirst=True)
+        date_upper = pd.to_datetime(date_upper, dayfirst=True)
+        df = self.final_table
+        df["counter"] = 1
+        for row in df.index:
+            if not date_lower <= df.loc[row, "production_date"] <= date_upper:
+                df.drop(row, inplace=True)
+        return df.reset_index(drop=True)
+
     def __df_with_date_range(self, date_lower: str, date_upper: str):
         filtered_data = DataFilter(data_frame=self.final_table, date_lower=date_lower, date_upper=date_upper)
         return filtered_data.for_dates()
@@ -60,10 +70,7 @@ class Analyser:
                 df_data_in_date_range.drop(row, inplace=True)
         return df_data_in_date_range["fin"]
 
-    def filter_for_years(self):
-        df = self.final_table
-        df["counter"] = 1
-        # your code here #
+
 
     def visualize_sales_per_countries(self):
         # your code here #
