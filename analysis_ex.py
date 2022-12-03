@@ -1,3 +1,4 @@
+import pandas
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -8,12 +9,25 @@ class Analyser:
         self.final_table = table
 
     @staticmethod
-    def text_output(description: str, data, filepath = None):
+    def text_output(description: str, data, filepath=None):
         print("________________________________________________")
         print(description)
         print(data)
         if filepath:
             print(f"Figure saved to {filepath}")
+
+    @staticmethod
+    def enhance_fig(data_y_axis, figure_safe_path, title: str, label_x_axis: str, label_y_axis: str, color: str,
+                    figure_kind: str,
+                    file_suffix: str, data: pandas.DataFrame, ):
+        data.plot(use_index=True, y=[data_y_axis], kind=figure_kind, color=color)
+        plt.title(title)
+        plt.legend().set_visible(False)
+        plt.xlabel(label_x_axis)
+        plt.xticks(rotation=0)
+        plt.ylabel(label_y_axis)
+        plt.grid(axis="y")
+        plt.savefig(figure_safe_path + file_suffix)
 
     def filter_for_years(self, date_lower: str = None, date_upper: str = None):
         date_lower = pd.to_datetime(date_lower, dayfirst=True)
@@ -27,7 +41,7 @@ class Analyser:
 
     def df_sales_top_three_countries(self, date_lower: str, date_upper: str):
         description = f"Top Three: sold vehicles per country " \
-                f"({pd.to_datetime(date_lower, dayfirst=True).year}-{pd.to_datetime(date_upper, dayfirst=True).year})"
+                      f"({pd.to_datetime(date_lower, dayfirst=True).year}-{pd.to_datetime(date_upper, dayfirst=True).year})"
         df_filtered_grouped_counted = self.filter_for_years(date_lower=date_lower, date_upper=date_upper) \
             .groupby(by=["country"]).count() \
             .sort_values(by=["fin", "country"], ascending=False) \
@@ -45,7 +59,7 @@ class Analyser:
 
     def df_sales_by_year(self, date_lower: str, date_upper: str):
         description = f"Sold vehicles per year " \
-                f"({pd.to_datetime(date_lower, dayfirst=True).year}-{pd.to_datetime(date_upper, dayfirst=True).year})"
+                      f"({pd.to_datetime(date_lower, dayfirst=True).year}-{pd.to_datetime(date_upper, dayfirst=True).year})"
         df_in_date_range = self.filter_for_years(date_lower=date_lower, date_upper=date_upper)
         df_in_date_range.loc[:, "production_year"] = pd.DatetimeIndex(df_in_date_range.loc[:, "production_date"]).year
         df_filtered_grouped_counted = df_in_date_range.groupby(by="production_year").count() \
