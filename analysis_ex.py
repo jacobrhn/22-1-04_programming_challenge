@@ -10,6 +10,9 @@ class Analyser:
         self.visualize_sales_per_countries()
         self.visualize_sales_per_year()
 
+    def show_results(self):
+        pass
+
     def filter_for_years(self, date_lower: str = None, date_upper: str = None):
         date_lower = pd.to_datetime(date_lower, dayfirst=True)
         date_upper = pd.to_datetime(date_upper, dayfirst=True)
