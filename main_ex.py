@@ -1,6 +1,5 @@
-import datetime
 from pipeline_ex import ETL
-from analysis_ex import DataFilter, Analyser
+from analysis_ex import Analyser
 
 # "database_path": "C:\\Users\\user\\Dropbox\\DHBW Stuttgart\\Informatik 1 Python\\Projektarbeit_Wiessler"
 # figure_save_path = "C:\\Users\\user\\Dropbox\\DHBW Stuttgart\\Informatik 1 Python\\Projektarbeit_Wiessler\\venv\\vehicle_data_project_exercise\\"

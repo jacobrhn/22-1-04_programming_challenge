@@ -4,7 +4,7 @@ from datetime import datetime
 from import_data_ex import DataLoader
 import pandas as pd
 
-pd.set_option('display.max_columns', 6)
+pd.set_option('display.max_columns', 7)
 
 
 class ETL:
@@ -32,13 +32,13 @@ class ETL:
         self.final_table = pd.merge(self.raw_data_tables["sales_codes"],
                                     self.raw_data_tables["vehicle_hash"],
                                     on="h_vehicle_hash").drop(columns=["h_vehicle_hash", "sales_code_array"])
-        self.final_table = self.final_table[["fin", "production_date", "country", "motor_type"]]
+        self.final_table = self.final_table[["fin", "production_date", "country", "motor_type", "counter"]]
 
     def enhance_raw_data(self):
         self.handle_nans()
         self.handle_invalid_fins()
         self.handle_invalid_dates()
-        self.add_motor_code()
+        self.add_counter_and_motor_code()
 
     def handle_invalid_dates(self):
         date_lower = datetime(2011, 1, 1, 00, 00, 00)
@@ -64,8 +64,8 @@ class ETL:
 
     def handle_nans(self):
         self.raw_data_tables["sales_codes"].dropna(axis=0, inplace=True)
-
-    def add_motor_code(self):
+    def add_counter_and_motor_code(self):
+        self.raw_data_tables["sales_codes"]["counter"] = 1
         for row in self.raw_data_tables["sales_codes"].index:
             self.raw_data_tables["sales_codes"].loc[row, "motor_type"] = self.raw_data_tables["sales_codes"]["sales_code_array"][row][0:3]
             if self.raw_data_tables["sales_codes"].loc[row, "motor_type"] == "Z5B":
