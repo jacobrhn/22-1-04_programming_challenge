@@ -1,5 +1,7 @@
 import pandas as pd
-import matplotlib as plt
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Analyser:
     def __init__(self, table, figure_save_path):
@@ -32,8 +34,10 @@ class Analyser:
     def df_sales_by_year(self, date_lower: str, date_upper: str):
         df_in_date_range = self.filter_for_years(date_lower=date_lower, date_upper=date_upper)
         df_in_date_range.loc[:, "production_year"] = pd.DatetimeIndex(df_in_date_range.loc[:, "production_date"]).year
-        return df_in_date_range.groupby(by="production_year").count().sort_values(by="counter", ascending=False) \
+        return df_in_date_range.groupby(by="production_year").count()\
             .drop(columns=["fin", "production_date", "country", "motor_type"])
+    def df_sales_by_year_sorted(self, date_lower: str, date_upper: str):
+        return self.df_sales_by_year(date_lower=date_lower, date_upper=date_upper).sort_values(by="counter", ascending=False)
 
     def df_fins_sorted_dates(self):
         return self.final_table.sort_values(by="production_date").drop(columns=["country", "counter", "motor_type"])
@@ -54,6 +58,31 @@ class Analyser:
             if not df_in_date_range.loc[row, "country"] == country:
                 df_in_date_range.drop(row, inplace=True)
         return df_in_date_range["fin"]
+
+    def graph_1(self, date_lower: str, date_upper: str):
+        figure_data = self.df_sales_top_three_countries(date_lower=date_lower, date_upper=date_upper)
+        figure_data.plot(use_index=True, y=["counter"], kind="bar", color="gray")
+        plt.title(f"Top Three: sold vehicles per country "
+                  f"({pd.to_datetime(date_lower, dayfirst=True).year}-"
+                  f"{pd.to_datetime(date_upper, dayfirst=True).year})")
+        plt.legend().set_visible(False)
+        plt.xlabel("Country")
+        plt.xticks(rotation=0)
+        plt.ylabel("Sold Vehicles (pc.)")
+        plt.savefig(self.figure_save_path + "countries.png")
+
+    def graph_2(self, date_lower: str, date_upper: str):
+        figure_data = self.df_sales_by_year(date_lower=date_lower, date_upper=date_upper)
+        figure_data.plot(use_index=True, color="gray", kind="bar")
+        plt.title(f"Sold vehicles per year "
+                  f"({pd.to_datetime(date_lower, dayfirst=True).year}-"
+                  f"{pd.to_datetime(date_upper, dayfirst=True).year})")
+        plt.legend().set_visible(False)
+        plt.xlabel("Year")
+        plt.xticks(rotation=0)
+        plt.ylabel("Sold Vehicles (pc.)")
+        plt.savefig(self.figure_save_path + "years.png")
+
 
     def visualize_sales_per_countries(self):
         # your code here #
